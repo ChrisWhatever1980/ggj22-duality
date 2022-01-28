@@ -1,2 +1,2 @@
 # ggj22-duality
-Entry for Global Game Jam 20222
+Entry for Global Game Jam 2022
