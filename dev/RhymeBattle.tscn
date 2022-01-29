@@ -1,0 +1,87 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Conductor.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Word.tscn" type="PackedScene" id=2]
+[ext_resource path="res://sound/song.ogg" type="AudioStream" id=3]
+[ext_resource path="res://RhymeBattle.gd" type="Script" id=4]
+[ext_resource path="res://Terminator.tscn" type="PackedScene" id=5]
+
+[node name="RhymeBattle" type="Node"]
+script = ExtResource( 4 )
+
+[node name="Conductor" parent="." instance=ExtResource( 1 )]
+stream = ExtResource( 3 )
+volume_db = -15.0
+bpm = 115
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -204.0
+margin_top = -132.0
+margin_right = 202.0
+margin_bottom = -50.0
+custom_constants/separation = 50
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Word1" parent="HBoxContainer" instance=ExtResource( 2 )]
+margin_left = 0.0
+margin_right = 64.0
+key = 1
+
+[node name="Word2" parent="HBoxContainer" instance=ExtResource( 2 )]
+margin_left = 114.0
+margin_right = 178.0
+key = 2
+
+[node name="Word3" parent="HBoxContainer" instance=ExtResource( 2 )]
+margin_left = 228.0
+margin_right = 292.0
+key = 3
+
+[node name="Word4" parent="HBoxContainer" instance=ExtResource( 2 )]
+key = 4
+
+[node name="Terminator" parent="." instance=ExtResource( 5 )]
+
+[node name="PlayerHealth" type="Node2D" parent="."]
+position = Vector2( 514, 577 )
+
+[node name="Bar" type="ColorRect" parent="PlayerHealth"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -336.0
+margin_top = -20.0
+margin_right = 336.0
+margin_bottom = 20.0
+color = Color( 0.054902, 0.247059, 0.827451, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EnemyHealth" type="Node2D" parent="."]
+position = Vector2( 507, 23 )
+
+[node name="Bar" type="ColorRect" parent="EnemyHealth"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -336.0
+margin_top = -20.0
+margin_right = 336.0
+margin_bottom = 20.0
+color = Color( 1, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="beat" from="Conductor" to="." method="_on_Conductor_beat"]
+[connection signal="measure" from="Conductor" to="." method="_on_Conductor_measure"]
