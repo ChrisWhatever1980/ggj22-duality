@@ -1,56 +1,50 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Conductor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Word.tscn" type="PackedScene" id=2]
-[ext_resource path="res://sound/song.ogg" type="AudioStream" id=3]
+[ext_resource path="res://HealthBar.gd" type="Script" id=3]
 [ext_resource path="res://RhymeBattle.gd" type="Script" id=4]
 [ext_resource path="res://Terminator.tscn" type="PackedScene" id=5]
+[ext_resource path="res://font/HARLOWSI.TTF" type="DynamicFontData" id=6]
+[ext_resource path="res://Camera.gd" type="Script" id=7]
+[ext_resource path="res://sound/missed.wav" type="AudioStream" id=8]
+[ext_resource path="res://sound/okay.wav" type="AudioStream" id=9]
+[ext_resource path="res://sound/good.wav" type="AudioStream" id=10]
+[ext_resource path="res://sound/perfect.wav" type="AudioStream" id=11]
+
+[sub_resource type="DynamicFont" id=1]
+size = 90
+font_data = ExtResource( 6 )
 
 [node name="RhymeBattle" type="Node"]
 script = ExtResource( 4 )
 
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2( 513, 300 )
+current = true
+script = ExtResource( 7 )
+
 [node name="Conductor" parent="." instance=ExtResource( 1 )]
-stream = ExtResource( 3 )
-volume_db = -15.0
-bpm = 115
-
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -204.0
-margin_top = -132.0
-margin_right = 202.0
-margin_bottom = -50.0
-custom_constants/separation = 50
-__meta__ = {
-"_edit_group_": true,
-"_edit_use_anchors_": false
-}
-
-[node name="Word1" parent="HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 0.0
-margin_right = 64.0
-key = 1
-
-[node name="Word2" parent="HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 114.0
-margin_right = 178.0
-key = 2
-
-[node name="Word3" parent="HBoxContainer" instance=ExtResource( 2 )]
-margin_left = 228.0
-margin_right = 292.0
-key = 3
-
-[node name="Word4" parent="HBoxContainer" instance=ExtResource( 2 )]
-key = 4
 
 [node name="Terminator" parent="." instance=ExtResource( 5 )]
 
 [node name="PlayerHealth" type="Node2D" parent="."]
 position = Vector2( 514, 577 )
+script = ExtResource( 3 )
+
+[node name="BarBackground" type="ColorRect" parent="PlayerHealth"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -336.0
+margin_top = -20.0
+margin_right = 336.0
+margin_bottom = 20.0
+color = Color( 0.0313726, 0.12549, 0.411765, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Bar" type="ColorRect" parent="PlayerHealth"]
 anchor_left = 0.5
@@ -68,6 +62,21 @@ __meta__ = {
 
 [node name="EnemyHealth" type="Node2D" parent="."]
 position = Vector2( 507, 23 )
+script = ExtResource( 3 )
+
+[node name="BarBackground" type="ColorRect" parent="EnemyHealth"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -336.0
+margin_top = -20.0
+margin_right = 336.0
+margin_bottom = 20.0
+color = Color( 0.533333, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Bar" type="ColorRect" parent="EnemyHealth"]
 anchor_left = 0.5
@@ -82,6 +91,49 @@ color = Color( 1, 0, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InfoLabel" type="Label" parent="CenterContainer"]
+margin_left = 313.0
+margin_top = 243.0
+margin_right = 711.0
+margin_bottom = 357.0
+custom_fonts/font = SubResource( 1 )
+text = "You Won!"
+
+[node name="Word1" parent="." instance=ExtResource( 2 )]
+position = Vector2( 229, 478 )
+key = 1
+
+[node name="Word2" parent="." instance=ExtResource( 2 )]
+position = Vector2( 422, 478 )
+key = 2
+
+[node name="Word3" parent="." instance=ExtResource( 2 )]
+position = Vector2( 612, 483 )
+key = 3
+
+[node name="Word4" parent="." instance=ExtResource( 2 )]
+position = Vector2( 795, 482 )
+key = 4
+
+[node name="PerfectPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+
+[node name="GoodPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+
+[node name="OkPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 9 )
+
+[node name="MissedPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 8 )
 
 [connection signal="beat" from="Conductor" to="." method="_on_Conductor_beat"]
 [connection signal="measure" from="Conductor" to="." method="_on_Conductor_measure"]

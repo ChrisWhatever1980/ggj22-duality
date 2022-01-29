@@ -1,9 +1,15 @@
-extends VBoxContainer
+extends Node2D
 
 
 export var key = 0
 
 
+onready var word_label = $VBoxContainer/Label
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$Key.texture = load("res://gfx/btn_" + str(key) + ".png")
+	$VBoxContainer/Key.text = str(key)
+
+
+func hit():
+	$AnimationPlayer.play("Pulse")
