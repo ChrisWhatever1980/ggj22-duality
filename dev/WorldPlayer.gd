@@ -1,23 +1,43 @@
-extends Node2D
+extends KinematicBody2D
+
+
+var collected_words = []
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	$Camera2D/DialogBox.visible = false
 
 
-func _process(delta: float) -> void:
+func word_collected(word):
+	collected_words.append(word)
+
+
+func _physics_process(delta):
+	
+	var move = Vector2.ZERO
+
 	if Input.is_action_pressed("walk_north"):
-		$AnimatedSprite.play("walk_north")
-		position.y -= 1
+		move.y -= 1
 	if Input.is_action_pressed("walk_south"):
-		$AnimatedSprite.play("walk_south")
-		position.y += 1
+		move.y += 1
 	if Input.is_action_pressed("walk_east"):
+		move.x += 1
+	if Input.is_action_pressed("walk_west"):
+		move.x -= 1
+
+	var velocity = move_and_slide(move * 100.0)
+
+	if velocity.y < 0.0:
+		$AnimatedSprite.play("walk_north")
+	elif velocity.y > 0.0:
+		$AnimatedSprite.play("walk_south")
+	elif velocity.x > 0.0:
 		$AnimatedSprite.play("walk_side")
 		$AnimatedSprite.flip_h = false
-		position.x += 1
-	if Input.is_action_pressed("walk_west"):
+	elif velocity.x < 0.0:
 		$AnimatedSprite.play("walk_side")
 		$AnimatedSprite.flip_h = true
-		position.x -= 1
+	
+	if velocity.length() == 0.0:
+		$AnimatedSprite.play("stand")

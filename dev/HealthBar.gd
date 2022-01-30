@@ -1,8 +1,8 @@
 extends Node2D
 
 
-var health = 50.0
-var max_health = 50.0
+var health = 15.0
+var max_health = 15.0
 
 
 # Called when the node enters the scene tree for the first time.

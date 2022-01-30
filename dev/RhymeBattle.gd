@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 
 var score = 0
 var combo = 0
@@ -28,30 +28,61 @@ var spawn_2_beat = 0
 var spawn_3_beat = 0
 var spawn_4_beat = 1
 
-var monster
 onready var player = $Player
-
+var monster
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	randomize()
 
-	select_rhymes(Word1.word_label)
-	select_rhymes(Word2.word_label)
-	select_rhymes(Word3.word_label)
-	select_rhymes(Word4.word_label)
-
 	InfoLabel.visible = false
+
+	$Conductor.play()
+
+
+func select_rhymes(player_words):
 	
-	# instantiate monster
-	var rand_monster = randi() % 10
-	monster = load("res://monsters/Monster" + str(rand_monster) + ".tscn").instance()
+	# use the players words
+	var words = 0
+	for word in player_words:
+		var rhyme = RhymeManager.get_rhyme(word)
+		print(word + " == " + rhyme)
+		RhymeManager.battle_rhymes.append([word, rhyme])
+		words += 1
+
+	# if player has not enough, fill with random rhymes
+	if words < 4:
+		while words < 4:
+			var pair = RhymeManager.get_random_pair()
+			RhymeManager.battle_rhymes.append(pair)
+			words += 1
+
+	# show player buttons for rhymes he has
+	var buttons = [Word1, Word2, Word3, Word4]
+	var btn_idx = 0
+	for br in RhymeManager.battle_rhymes:
+		if player_words.has(br[0]):
+			buttons[btn_idx].word_label.text = br[0]
+			buttons[btn_idx].visible = true
+		else:
+			buttons[btn_idx].visible = false
+		btn_idx += 1
+
+
+func initialize(_world_monster, player_words):
+	monster = _world_monster.duplicate()
 	add_child(monster)
 	monster.name = "Monster"
 	monster.position = Vector2(90, 90)
 	monster.scale = Vector2.ONE * 7
+	
+	print(str(player_words))
 
-	$Conductor.play()
+	RhymeManager.battle_rhymes.clear()
+
+	select_rhymes(player_words)
+	
+	$DialogBox.show_dialog("Press the number key for the right rhyme to defeat the monster!", "")
 
 
 func monster_hit():
@@ -89,38 +120,31 @@ func player_hit():
 	$MonsterTween.start()
 
 
-func _input(event):
-	if event is InputEventKey:
-		if event.is_pressed() and event.scancode == KEY_SPACE:
-			$Camera.add_trauma(1.0)
-		if event.is_pressed() and event.scancode == KEY_V:
-			$Camera.add_trauma(1.0)
+func _unhandled_input(event: InputEvent) -> void:
+	if !visible:
+		return
+
+	if Input.is_key_pressed(KEY_H):
+		game_over(true)
 		
 
-
-func _unhandled_input(event: InputEvent) -> void:
 	var pressed_rhyme = ""
-	if event.is_action_pressed("key_1"):
+	if Word1.visible and event.is_action_pressed("key_1"):
 		pressed_rhyme = Word1.word_label.text
 		Word1.hit()
-	elif event.is_action_pressed("key_2"):
+	elif Word2.visible and event.is_action_pressed("key_2"):
 		pressed_rhyme = Word2.word_label.text
 		Word2.hit()
-	elif event.is_action_pressed("key_3"):
+	elif Word3.visible and event.is_action_pressed("key_3"):
 		pressed_rhyme = Word3.word_label.text
 		Word3.hit()
-	elif event.is_action_pressed("key_4"):
+	elif Word4.visible and event.is_action_pressed("key_4"):
 		pressed_rhyme = Word4.word_label.text
 		Word4.hit()
 
 	if pressed_rhyme != "":
+		RhymeManager.play_rhyme(pressed_rhyme)
 		$Terminator.handle_rhyme(pressed_rhyme)
-
-
-func select_rhymes(label):
-	var pair = RhymeManager.get_random_pair()
-	label.text = pair[0]
-	RhymeManager.battle_rhymes.append(pair)
 
 
 func _on_Conductor_beat(position) -> void:
@@ -147,7 +171,7 @@ func _on_Conductor_beat(position) -> void:
 func _on_Conductor_measure(position) -> void:
 
 	var enemy = $EnemyHealth.health / $EnemyHealth.max_health
-	if enemy < 0.25:
+	if enemy < 0.5:
 		spawn_1_beat = 0
 		spawn_2_beat = 1
 		spawn_3_beat = 0
@@ -247,30 +271,39 @@ func increment_score(by):
 
 	if $EnemyHealth.health <= 0:
 		# Player wins, exit battle
-		$ExplodingSprite.initialize(monster.get_node("AnimatedSprite").frames.get_frame("default", 0))
-		monster.visible = false
-		show_info_label("You won!")
-		game_over()
+		game_over(true)
 
 	if $PlayerHealth.health <= 0:
+		game_over(false)
+
+
+func game_over(player_won):
+	$Conductor.stop()
+
+	if player_won:
+		$ExplodingSprite.initialize(monster.get_node("AnimatedSprite").frames.get_frame("default", 0))
+
+		show_info_label("You won!")
+		monster.visible = false
+	else:
 		# Player looses, exit battle
 		$ExplodingSprite.position = player.position
 		$ExplodingSprite.initialize(player.get_node("AnimatedSprite").frames.get_frame("default", 0))
-		player.visible = false
+
 		show_info_label("You lost!")
-		game_over()
+		player.visible = false
 
-
-func game_over():
-	$Conductor.stop()
+	# return to map
+	GameEvents.emit_signal("finished_battle", player_won)
 
 	var notes = get_tree().get_nodes_in_group("note")
 	for this_note in notes:
 		this_note.queue_free()
 
 	yield(get_tree().create_timer(2.0), "timeout")
-	get_tree().quit()
 	
+	queue_free()
+	#visible = false
 
 
 func show_info_label(text):

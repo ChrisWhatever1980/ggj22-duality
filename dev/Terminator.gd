@@ -71,3 +71,8 @@ func handle_rhyme(pressed_rhyme):
 			reset()
 		else:
 			get_parent().increment_score(0)
+
+
+func _on_PlayRhyme_area_entered(area):
+	if area.is_in_group("note"):
+		RhymeManager.play_rhyme(area.rhyme)

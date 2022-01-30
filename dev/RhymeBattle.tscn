@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://Conductor.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Word.tscn" type="PackedScene" id=2]
@@ -14,6 +14,23 @@
 [ext_resource path="res://HealthBar.tscn" type="PackedScene" id=12]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=13]
 [ext_resource path="res://ExplodingSprite.tscn" type="PackedScene" id=14]
+[ext_resource path="res://DialogBox.gd" type="Script" id=15]
+[ext_resource path="res://gfx/ui/panel_beige_right.png" type="Texture" id=16]
+[ext_resource path="res://gfx/ui/panel_beige_middle.png" type="Texture" id=17]
+[ext_resource path="res://gfx/ui/panel_beige_left.png" type="Texture" id=18]
+
+[sub_resource type="Shader" id=12]
+code = "shader_type canvas_item;
+
+uniform float blur_amount : hint_range(0, 5);
+
+void fragment() {
+	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, blur_amount);
+}"
+
+[sub_resource type="ShaderMaterial" id=11]
+shader = SubResource( 12 )
+shader_param/blur_amount = 5.0
 
 [sub_resource type="DynamicFont" id=1]
 size = 90
@@ -211,8 +228,24 @@ damping = 30.0
 scale = 10.0
 color_ramp = SubResource( 6 )
 
-[node name="RhymeBattle" type="Node"]
+[sub_resource type="DynamicFont" id=13]
+size = 20
+outline_size = 2
+outline_color = Color( 0.0862745, 0.0862745, 0.0862745, 1 )
+font_data = ExtResource( 6 )
+
+[node name="RhymeBattle" type="Node2D"]
 script = ExtResource( 4 )
+
+[node name="BlurBackground" type="ColorRect" parent="."]
+material = SubResource( 11 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 1024.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2( 513, 300 )
@@ -362,6 +395,120 @@ position = Vector2( 90, 90 )
 scale = Vector2( 7, 7 )
 emitting = false
 one_shot = true
+
+[node name="DialogBox" type="Control" parent="."]
+visible = false
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+margin_left = 314.0
+margin_top = 401.0
+margin_right = 314.0
+margin_bottom = 401.0
+script = ExtResource( 15 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogBox"]
+margin_right = 40.0
+margin_bottom = 40.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect2" type="TextureRect" parent="DialogBox/HBoxContainer"]
+margin_right = 27.0
+margin_bottom = 100.0
+texture = ExtResource( 18 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect" type="TextureRect" parent="DialogBox/HBoxContainer"]
+margin_left = 27.0
+margin_right = 100.0
+margin_bottom = 100.0
+texture = ExtResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect4" type="TextureRect" parent="DialogBox/HBoxContainer"]
+margin_left = 100.0
+margin_right = 173.0
+margin_bottom = 100.0
+texture = ExtResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect5" type="TextureRect" parent="DialogBox/HBoxContainer"]
+margin_left = 173.0
+margin_right = 246.0
+margin_bottom = 100.0
+texture = ExtResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect6" type="TextureRect" parent="DialogBox/HBoxContainer"]
+margin_left = 246.0
+margin_right = 319.0
+margin_bottom = 100.0
+texture = ExtResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect7" type="TextureRect" parent="DialogBox/HBoxContainer"]
+margin_left = 319.0
+margin_right = 392.0
+margin_bottom = 100.0
+texture = ExtResource( 17 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TextureRect3" type="TextureRect" parent="DialogBox/HBoxContainer"]
+margin_left = 392.0
+margin_right = 414.0
+margin_bottom = 100.0
+texture = ExtResource( 16 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="DialogBox"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 15.0
+margin_top = 12.0
+margin_right = 399.0
+margin_bottom = 67.0
+custom_fonts/font = SubResource( 13 )
+text = "As you gaze into the crystal, a word forms in your mind:"
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="DialogBox"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_top = 69.0
+margin_right = 401.0
+margin_bottom = 95.0
+custom_colors/font_color = Color( 0.156863, 0.627451, 0.792157, 1 )
+custom_fonts/font = SubResource( 13 )
+text = "heart"
+align = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="beat" from="Conductor" to="." method="_on_Conductor_beat"]
 [connection signal="measure" from="Conductor" to="." method="_on_Conductor_measure"]
