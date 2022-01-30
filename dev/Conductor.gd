@@ -32,6 +32,10 @@ func _ready() -> void:
 	sec_per_beat = 60.0 / bpm
 
 
+func get_note_speed():
+	return measures * sec_per_beat
+
+
 func play():
 	NeutralTheme.play()
 	UpbeatTheme.play()
@@ -61,7 +65,6 @@ func _physics_process(_delta: float) -> void:
 
 
 func _report_beat():
-	#print(str(song_position_in_beats))
 	if last_reported_beat < song_position_in_beats:
 		if measure > measures:
 			measure = 1
@@ -105,20 +108,20 @@ func _on_StartTimer_timeout() -> void:
 
 
 func neutral():
-	print("Neutral")
 	current_theme = NeutralTheme
+	print("neutral")
 	fade_themes(max_volume, mute_volume, mute_volume)
 
 
 func upbeat():
-	print("Upbeat")
 	current_theme = UpbeatTheme
+	print("upbeat")
 	fade_themes(mute_volume, max_volume, mute_volume)
 
 
 func downbeat():
-	print("Downbeat")
 	current_theme = DownbeatTheme
+	print("downbeat")
 	fade_themes(mute_volume, mute_volume, max_volume)
 
 

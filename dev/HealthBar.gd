@@ -1,8 +1,8 @@
 extends Node2D
 
 
-var health = 100.0
-var max_health = 100.0
+var health = 50.0
+var max_health = 50.0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -11,7 +11,7 @@ func _ready():
 
 
 func take_damage(dmg):
-	print("Take damage: " + str(health) + " - " + str(dmg))
+	#print("Take damage: " + str(health) + " - " + str(dmg))
 	health -= dmg
 	if health < 0:
 		health = 0

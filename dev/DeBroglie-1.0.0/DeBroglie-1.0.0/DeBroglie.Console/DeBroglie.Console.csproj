@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <ApplicationIcon />
+    <OutputType>Exe</OutputType>
+    <StartupObject>DeBroglie.Console.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0006" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DeBroglie.MagicaVoxel\DeBroglie.MagicaVoxel.csproj" />
+    <ProjectReference Include="..\DeBroglie.Tiled\DeBroglie.Tiled.csproj" />
+    <ProjectReference Include="..\DeBroglie\DeBroglie.csproj" />
+  </ItemGroup>
+
+</Project>

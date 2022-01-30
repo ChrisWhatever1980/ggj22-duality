@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://font/HARLOWSI.TTF" type="DynamicFontData" id=1]
 [ext_resource path="res://Word.gd" type="Script" id=2]
 [ext_resource path="res://font/gui_font.tres" type="DynamicFont" id=3]
+[ext_resource path="res://gfx/ui/panel_beige.png" type="Texture" id=4]
 
 [sub_resource type="Animation" id=2]
 resource_name = "Pulse"
@@ -81,6 +82,17 @@ script = ExtResource( 2 )
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Pulse = SubResource( 2 )
 anims/RESET = SubResource( 3 )
+
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_left = -80.0
+margin_top = -69.0
+margin_right = 81.0
+margin_bottom = 69.0
+texture = ExtResource( 4 )
+stretch_mode = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 anchor_left = 0.5

@@ -2,7 +2,7 @@ extends Area2D
 
 
 var direction
-var speed = 100
+var speed = 0
 var hit = false
 var rhyme
 
@@ -24,7 +24,8 @@ func _physics_process(delta: float) -> void:
 		labelHandle.position += Vector2.UP * speed * delta
 
 
-func initialize(start, target, _rhyme):
+func initialize(start, target, _speed, _rhyme):
+	speed = _speed
 	rhyme = _rhyme
 	label.text = rhyme
 	position = start
@@ -32,31 +33,19 @@ func initialize(start, target, _rhyme):
 
 
 func destroy(score):
+
+	label.modulate = Color.blue
+	$AnimationPlayer.play("Pulse")
+	$Particles2D.emitting = true
+
 	$Timer.start()
 	hit = true
-	$Particles2D.emitting = true
 	if score == 3:
 		label.text = "GREAT"
 	elif score == 2:
 		label.text = "GOOD"
 	elif score == 1:
 		label.text = "OKAY"
-
-
-func update_label(state):
-	if hit:
-		label.modulate = Color.white
-		labelHandle.scale = Vector2.ONE
-	elif state == 3:
-		label.modulate = Color.red
-		labelHandle.scale = Vector2.ONE * 2.0
-	elif state == 2:
-		label.modulate = Color.green
-	elif state == 1:
-		label.modulate = Color.blue
-	else:
-		label.modulate = Color.white
-		labelHandle.scale = Vector2.ONE
 
 
 func _on_Timer_timeout() -> void:

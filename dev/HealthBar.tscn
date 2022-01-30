@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://HealthBar.gd" type="Script" id=1]
+
+[node name="PlayerHealth" type="Node2D"]
+position = Vector2( 538, 576 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="BarBackground" type="ColorRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -336.0
+margin_top = -20.0
+margin_right = 336.0
+margin_bottom = 20.0
+color = Color( 0.0313726, 0.12549, 0.411765, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Bar" type="ColorRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -336.0
+margin_top = -20.0
+margin_right = 336.0
+margin_bottom = 20.0
+color = Color( 0.054902, 0.247059, 0.827451, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -1,10 +1,17 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://Note.gd" type="Script" id=1]
 [ext_resource path="res://font/gui_font.tres" type="DynamicFont" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 40, 17 )
+extents = Vector2( 40, 5 )
+
+[sub_resource type="Gradient" id=5]
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=6]
+gradient = SubResource( 5 )
+width = 256
 
 [sub_resource type="ParticlesMaterial" id=2]
 emission_shape = 2
@@ -17,6 +24,55 @@ initial_velocity_random = 0.21
 orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 scale = 5.0
+color = Color( 0, 0, 1, 1 )
+color_ramp = SubResource( 6 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "Pulse"
+length = 0.4
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Node2D:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 1.2, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.2, 0.4 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Node2D:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 1, -0.25, 0, 0.25, 0, 1.2, -0.25, 0, 0.25, 0, 1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.2, 0.4 )
+}
+
+[sub_resource type="Animation" id=4]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Node2D:scale:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("Node2D:scale:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 1, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
 
 [node name="Note" type="Area2D" groups=["note"]]
 script = ExtResource( 1 )
@@ -37,6 +93,7 @@ margin_left = -36.5
 margin_top = -19.5
 margin_right = 36.5
 margin_bottom = 19.5
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 2 )
 text = "Word"
 align = 1
@@ -52,5 +109,9 @@ one_shot = true
 explosiveness = 1.0
 randomness = 1.0
 process_material = SubResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/Pulse = SubResource( 3 )
+anims/RESET = SubResource( 4 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
